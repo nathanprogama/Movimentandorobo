@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movimentação do Robô</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Movimentação do Robô</h1>
+
+  <div class="robot-container">
+    <img id="robot" src="https://blob.sololearn.com/courses/robot-c.jpg">
+  </div>
+
+  <div class="botao">
+    <button onclick="registrarClique('Esquerda'); robot.src='https://blob.sololearn.com/courses/robot-l.jpg'">Esquerda</button>
+    <button onclick="registrarClique('Parar'); robot.src='https://blob.sololearn.com/courses/robot-c.jpg'">Parar</button>
+    <button onclick="registrarClique('Direita'); robot.src='https://blob.sololearn.com/courses/robot-r.jpg'">Direita</button>
+    <button onclick="registrarClique('Local Aleatorio'); moverAleatorio()">Local Aleatório</button>
+  </div>
+  <script>
+     function moverAleatorio(){
+      const robot = document.getElementById("robot");
+      const largura = window.innerWidth - robot.width;
+      const altura = window.innerHeight - robot.height;
+
+      const x = Math.random() * largura;
+      const y = Math.random() * altura;
+
+      robot.style.position = "absolute";
+      robot.style.left = x + "px";
+      robot.style.top = y + "px";
+      robot.style.transform = "translate(0,0)";
+     }
+ const sequenciasSecretas = [
+    {
+      codigo: ["Esquerda", "Direita", "Parar", "Local Aleatorio"],
+      mensagem: "Você achou uma sequência secreta! Receba um 🌮"
+    },
+    {
+      codigo: ["Direita", "Local Aleatorio", "Esquerda", "Local Aleatorio"],
+      mensagem: "Você achou uma sequência super secreta! Receba um 🍕"
+    }
+  ];
+
+  let entradaUsuario = [];
+
+  function registrarClique(acao) {
+    entradaUsuario.push(acao);
+
+    // Mantém o tamanho do array igual ao maior código secreto
+    const maiorTamanho = Math.max(...sequenciasSecretas.map(s => s.codigo.length));
+    if (entradaUsuario.length > maiorTamanho) {
+      entradaUsuario.shift();
+    }
+
+    // Verifica todas as sequências secretas
+    sequenciasSecretas.forEach(sequencia => {
+      if (entradaUsuario.length >= sequencia.codigo.length) {
+        // Pega o fim da entrada do usuário para comparar com o código secreto
+        const ultimoSegmento = entradaUsuario.slice(-sequencia.codigo.length);
+        if (ultimoSegmento.join(",") === sequencia.codigo.join(",")) {
+          mostrarMensagemSecreta(sequencia.mensagem);
+          entradaUsuario = [];
+        }
+      }
+    });
+  }
+
+  function mostrarMensagemSecreta(texto) {
+    const msg = document.createElement("div");
+    msg.textContent = texto;
+    msg.style.position = "fixed";
+    msg.style.top = "20px";
+    msg.style.left = "50%";
+    msg.style.transform = "translateX(-50%)";
+    msg.style.background = "#4caf50";
+    msg.style.color = "white";
+    msg.style.padding = "15px 30px";
+    msg.style.borderRadius = "8px";
+    msg.style.fontSize = "20px";
+    msg.style.zIndex = "9999";
+    document.body.appendChild(msg);
+
+    setTimeout(() => msg.remove(), 4000);
+  }
+  </script>
+</body>
+</html>
